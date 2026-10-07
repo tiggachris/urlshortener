@@ -38,7 +38,7 @@ spring:
 
 # Application custom configurations
 app:
-  base-url: ${APP_BASE_URL:https://swift.link}
+  base-url: ${APP_BASE_URL:}
   cache:
     ttl-hours: 24
   rate-limit:

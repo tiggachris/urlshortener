@@ -62,9 +62,10 @@ window.handleShorten = async function(event) {
       throw new Error(data.message || data.error || (data.errors ? Object.values(data.errors).join(', ') : 'Unable to shorten this URL.'));
     }
 
-    // Success: Populate Result Card with https://swift.link/...
+    // Success: Populate Result Card with dynamic live origin URL
     currentShortCode = data.shortCode;
-    currentShortUrl = `https://swift.link/${data.shortCode}`;
+    const baseOrigin = window.location.port === '5173' ? 'http://localhost:8080' : window.location.origin;
+    currentShortUrl = `${baseOrigin}/${data.shortCode}`;
 
     const shortUrlEl = document.getElementById('result-short-url');
     if (shortUrlEl) {
@@ -116,10 +117,10 @@ window.inspectAnalyticsFromResult = function() {
   window.fetchAnalyticsData();
 };
 
-// Test Live Redirect (routes through local backend redirect endpoint)
+// Test Live Redirect
 window.testLiveRedirect = function() {
-  if (!currentShortCode) return;
-  window.open(`${API_BASE}/${currentShortCode}`, '_blank');
+  if (!currentShortUrl) return;
+  window.open(currentShortUrl, '_blank');
 };
 
 // Fetch Analytics

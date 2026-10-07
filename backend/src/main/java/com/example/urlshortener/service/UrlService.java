@@ -87,12 +87,13 @@ public class UrlService {
 
         // 1. Try Redis cache first
         String cachedUrl = urlCacheService.get(shortCode);
+        String resolvedShortUrl = (baseUrl != null && !baseUrl.isBlank()) ? baseUrl + "/" + shortCode : "/" + shortCode;
         if (cachedUrl != null) {
             long latencyMs = (System.nanoTime() - startTime) / 1_000_000;
             return UrlResponse.builder()
                     .shortCode(shortCode)
                     .originalUrl(cachedUrl)
-                    .shortUrl(baseUrl + "/" + shortCode)
+                    .shortUrl(resolvedShortUrl)
                     .fromCache(true)
                     .latencyMs(Math.max(0, latencyMs))
                     .build();
@@ -113,9 +114,12 @@ public class UrlService {
     }
 
     private UrlResponse buildUrlResponse(UrlMapping mapping, boolean fromCache, long latencyMs) {
+        String resolvedShortUrl = (baseUrl != null && !baseUrl.isBlank()) 
+                ? baseUrl + "/" + mapping.getShortCode() 
+                : "/" + mapping.getShortCode();
         return UrlResponse.builder()
                 .shortCode(mapping.getShortCode())
-                .shortUrl(baseUrl + "/" + mapping.getShortCode())
+                .shortUrl(resolvedShortUrl)
                 .originalUrl(mapping.getOriginalUrl())
                 .clickCount(mapping.getClickCount())
                 .createdAt(mapping.getCreatedAt())
