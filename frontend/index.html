@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SwiftLink — Fast, Clean & Reliable URL Shortener</title>
+  <meta name="description" content="Create clean, memorable short links in seconds with real-time click tracking and analytics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div class="background-glow top-left"></div>
+  <div class="background-glow bottom-right"></div>
+
+  <!-- Header -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="logo-title">Swift<span>Link</span></span>
+    </div>
+    <div class="nav-status">
+      <div class="status-pill">
+        <span class="status-dot green"></span>
+        <span>System Online</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="main-container">
+    <section class="hero-section">
+      <div class="hero-tag">
+        <span class="tag-sparkle">✨</span> Simple, Fast & Reliable Links
+      </div>
+      <h1 class="hero-title">Shorten, share, and track your <span class="gradient-text">links in seconds</span></h1>
+      <p class="hero-subtitle">
+        Transform long URLs into memorable short links with real-time visitor stats and custom aliases.
+      </p>
+
+      <!-- Feature Chips -->
+      <div class="badges-row">
+        <span class="tech-chip">⚡ Instant Redirects</span>
+        <span class="tech-chip">📈 Click Analytics</span>
+        <span class="tech-chip">🎯 Custom Aliases</span>
+        <span class="tech-chip">🔒 Expiration Controls</span>
+      </div>
+    </section>
+
+    <!-- Main Interactive Card -->
+    <section class="app-card">
+      <!-- Tabs -->
+      <div class="tabs-header">
+        <button class="tab-btn active" id="tab-shorten-btn" onclick="switchTab('shorten')">
+          <svg class="tab-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+          Shorten URL
+        </button>
+        <button class="tab-btn" id="tab-analytics-btn" onclick="switchTab('analytics')">
+          <svg class="tab-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Click Analytics
+        </button>
+      </div>
+
+      <!-- Tab 1: Shorten URL View -->
+      <div class="tab-content active" id="view-shorten">
+        <form id="shorten-form" onsubmit="handleShorten(event)">
+          <div class="input-group">
+            <svg class="input-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <input 
+              type="text" 
+              id="original-url-input" 
+              placeholder="Paste your long URL here (e.g., https://example.com/long-article)..." 
+              autocomplete="off"
+              spellcheck="false"
+              required 
+            />
+            <button type="submit" class="cta-btn" id="shorten-submit-btn">
+              <span>Shorten</span>
+              <svg class="btn-arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Custom Link Settings -->
+          <div class="custom-slug-row">
+            <div class="option-field slug-field">
+              <label for="custom-alias-input">Custom Link Name (Optional)</label>
+              <div class="sub-input-wrap">
+                <span class="prefix-label">https://swift.link/</span>
+                <input 
+                  type="text" 
+                  id="custom-alias-input" 
+                  placeholder="my-portfolio" 
+                  maxlength="30" 
+                  autocomplete="off" 
+                  spellcheck="false"
+                />
+              </div>
+            </div>
+            <div class="option-field expiry-field">
+              <label for="expires-input">Link Expiration (Optional)</label>
+              <div class="sub-input-wrap">
+                <input 
+                  type="number" 
+                  id="expires-input" 
+                  placeholder="Days (e.g. 30)" 
+                  min="1" 
+                  max="365" 
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div id="shorten-error-alert" class="error-alert hidden"></div>
+
+        <!-- Result Card -->
+        <div id="result-card" class="result-card hidden">
+          <div class="result-header">
+            <span class="result-status-badge" id="cache-badge">✨ Your short link is ready!</span>
+          </div>
+
+          <div class="result-body">
+            <div class="result-url-wrap">
+              <span class="result-label">Shortened Link:</span>
+              <div class="url-display-box">
+                <a href="#" id="result-short-url" target="_blank" class="short-url-link">https://...</a>
+                <button class="copy-btn" id="copy-btn" onclick="copyResultUrl()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="copy-btn-text">Copy</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="result-destination-wrap">
+              <span class="result-label">Destination URL:</span>
+              <span id="result-original-url" class="original-url-text">https://...</span>
+            </div>
+
+            <div class="result-actions">
+              <button class="action-btn outline" id="view-stats-btn" onclick="inspectAnalyticsFromResult()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                View Analytics
+              </button>
+              <button class="action-btn outline" id="test-redirect-btn" onclick="testLiveRedirect()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+                Open Link
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Analytics View -->
+      <div class="tab-content hidden" id="view-analytics">
+        <div class="analytics-search-row">
+          <input 
+            type="text" 
+            id="analytics-code-input" 
+            placeholder="Enter short code or alias (e.g. my-portfolio)..." 
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="cta-btn secondary" id="fetch-analytics-btn" onclick="fetchAnalyticsData()">
+            <span>View Stats</span>
+          </button>
+        </div>
+
+        <div id="analytics-error-alert" class="error-alert hidden"></div>
+        <div id="analytics-loading" class="loading-spinner hidden">Loading link analytics...</div>
+
+        <div id="analytics-data-container" class="hidden">
+          <!-- Metrics Cards -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-title">TOTAL CLICKS</div>
+              <div class="metric-value gradient-text" id="metric-total-clicks">0</div>
+              <div class="metric-sub">All-time visitor clicks</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">DESTINATION URL</div>
+              <div class="metric-value link-preview" id="metric-original-url">-</div>
+              <div class="metric-sub">Target destination</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">TOP REFERRER</div>
+              <div class="metric-value highlight" id="metric-top-referrer">Direct</div>
+              <div class="metric-sub">Primary traffic source</div>
+            </div>
+          </div>
+
+          <!-- Breakdown Sections -->
+          <div class="breakdown-grid">
+            <!-- Browser Breakdown -->
+            <div class="breakdown-card">
+              <h3>Clicks by Browser</h3>
+              <div id="browser-breakdown-list" class="breakdown-list"></div>
+            </div>
+
+            <!-- Device Breakdown -->
+            <div class="breakdown-card">
+              <h3>Clicks by Device</h3>
+              <div id="device-breakdown-list" class="breakdown-list"></div>
+            </div>
+          </div>
+
+          <!-- Recent Events Table -->
+          <div class="recent-events-card">
+            <h3>Recent Visitors</h3>
+            <div class="table-container">
+              <table class="events-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Browser</th>
+                    <th>Device</th>
+                    <th>Referrer</th>
+                    <th>Visitor</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-events-tbody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Features / Benefits Section -->
+    <section class="features-section">
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <h3 class="feature-title">Instant Redirection</h3>
+        <p class="feature-desc">Visitors are seamlessly redirected to their destination with lightning-fast response times.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </div>
+        <h3 class="feature-title">Real-Time Analytics</h3>
+        <p class="feature-desc">Understand your audience with detailed insights into clicks, devices, browsers, and traffic sources.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="6"></circle>
+            <circle cx="12" cy="12" r="2"></circle>
+          </svg>
+        </div>
+        <h3 class="feature-title">Customizable Links</h3>
+        <p class="feature-desc">Create custom aliases that match your brand and set optional expiration dates when needed.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>© 2026 SwiftLink • Simple, fast, and reliable link shortening.</p>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
